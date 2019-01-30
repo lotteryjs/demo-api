@@ -85,21 +85,21 @@ steps:
         - tag
   
   - name: scp
-  image: appleboy/drone-scp
-  settings:
-    host:
-      from_secret: host
-    port:
-      from_secret: port
-    username:
-      from_secret: username
-    password:
-      from_secret: password
-    target: 
-      from_secret: target
-    source: docker-compose.yml
-    when:
-      branch: master
+    image: appleboy/drone-scp
+    settings:
+      host:
+        from_secret: host
+      port:
+        from_secret: port
+      username:
+        from_secret: username
+      password:
+        from_secret: password
+      target: 
+        from_secret: target
+      source: docker-compose.yml
+      when:
+        branch: master
 
   - name: ssh
     image: appleboy/drone-ssh
