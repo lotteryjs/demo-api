@@ -97,8 +97,7 @@ steps:
       from_secret: password
     target: 
       from_secret: target
-    source: 
-      - docker-compose.yml
+    source: docker-compose.yml
     when:
       branch: master
 
