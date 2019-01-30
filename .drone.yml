@@ -1,0 +1,106 @@
+kind: pipeline
+name: testing
+
+clone:
+  depth: 50
+
+steps:
+  - name: testing
+    image: golang:1.11
+    pull: true
+    commands:
+      - go test -v .
+      - go vet
+
+---
+kind: pipeline
+name: build_linux_i386
+
+clone:
+  depth: 50
+
+steps:
+  - name: fetch
+    image: docker:git
+    commands:
+      - git fetch --tags
+
+  - name: binary
+    image: golang:1.11
+    pull: true
+    commands:
+      - make build_linux_amd64
+
+  - name: publish
+    image: plugins/docker:17.12
+    settings:
+      repo: kirkwwang/test
+      auto_tag: true
+      dockerfile: Dockerfile.alpine
+      default_suffix: alpine
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    when:
+      event:
+        - push
+        - tag
+
+  - name: ssh
+    image: appleboy/drone-ssh
+    pull: true
+    settings:
+      host:
+        from_secret: host
+      port:
+        from_secret: port
+      username:
+        from_secret: username
+      password:
+        from_secret: password
+      script:
+        - docker-compose pull app_1 app_2
+        - docker-compose up -d --force-recreate --no-deps app_1
+        - docker-compose up -d --force-recreate --no-deps app_2
+        - docker images --quiet --filter=dangling=true | xargs --no-run-if-empty docker rmi -f
+
+depends_on:
+  - testing
+
+---
+kind: pipeline
+name: build_linux_amd64
+
+clone:
+  depth: 50
+
+steps:
+  - name: fetch
+    image: docker:git
+    commands:
+      - git fetch --tags
+
+  - name: binary
+    image: golang:1.11
+    pull: true
+    commands:
+      - make build_linux_amd64
+
+  - name: publish
+    image: plugins/docker:17.12
+    settings:
+      repo: kirkwwang/test
+      auto_tag: true
+      dockerfile: Dockerfile
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    when:
+      event:
+        - push
+        - tag
+
+depends_on:
+  - testing
