@@ -18,7 +18,6 @@ name: build_linux_amd64
 
 clone:
   depth: 50
-  tags: true
 
 steps:
   - name: fetch
@@ -74,6 +73,12 @@ steps:
         - docker-compose up -d --force-recreate --no-deps app_1
         - docker-compose up -d --force-recreate --no-deps app_2
         - docker images --quiet --filter=dangling=true | xargs --no-run-if-empty docker rmi -f
+  
+  trigger:
+    branch:
+    - master
+    event:
+    - push
 
 depends_on:
   - testing
