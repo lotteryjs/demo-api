@@ -18,6 +18,10 @@ name: build_linux_amd64
 
 clone:
   depth: 50
+  when:
+    branch: master
+    event:
+      - tag
 
 steps:
   - name: fetch
@@ -76,8 +80,3 @@ steps:
 
 depends_on:
   - testing
-
-when:
-  branch: master
-  event:
-    - tag
