@@ -79,6 +79,7 @@ trigger:
     - master
   event:
     - push
+    - tag
 
 depends_on:
   - testing
