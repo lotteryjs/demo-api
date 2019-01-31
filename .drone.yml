@@ -78,7 +78,6 @@ trigger:
   branch:
     - master
   event:
-    - push
     - tag
 
 depends_on:
