@@ -24,22 +24,6 @@ steps:
     image: docker:git
     commands:
       - git fetch --tags
-  
-  - name: scp
-    image: appleboy/drone-scp
-    settings:
-      host:
-        from_secret: host
-      port:
-        from_secret: port
-      username:
-        from_secret: username
-      password:
-        from_secret: password
-      target: /root
-      source: docker-compose.yml
-      when:
-        branch: master
 
   - name: binary
     image: golang:1.11
@@ -61,6 +45,22 @@ steps:
       event:
         - push
         - tag
+        
+  - name: scp
+    image: appleboy/drone-scp
+    settings:
+      host:
+        from_secret: host
+      port:
+        from_secret: port
+      username:
+        from_secret: username
+      password:
+        from_secret: password
+      target: /root
+      source: docker-compose.yml
+      when:
+        branch: master
 
   - name: ssh
     image: appleboy/drone-ssh

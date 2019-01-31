@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app_1:
-    image: kirkwwang/test:alpine
+    image: appleboy/test:alpine
     restart: always
     networks:
       - web
@@ -18,7 +18,7 @@ services:
       - "traefik.basic.protocol=http"
 
   app_2:
-    image: kirkwwang/test:alpine
+    image: appleboy/test:alpine
     restart: always
     networks:
       - web
