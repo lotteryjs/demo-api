@@ -76,9 +76,9 @@ steps:
   
   trigger:
     branch:
-    - master
+      - master
     event:
-    - push
+      - tag
 
 depends_on:
   - testing
